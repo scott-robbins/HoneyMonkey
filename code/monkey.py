@@ -18,8 +18,11 @@ def honey(port, run_time, verbose, reply):
     try:
         while (time.time() - tic) < run_time:
             client, client_adr = s.accept()
-            client.send(reply)
-            client.close()
+            try:
+                client.send(reply)
+                client.close()
+            except socket.error:
+                print '[*] Connection Broken with %s' % client_adr[0]
             msg = '[*] Connection accepted-> %s:%d\n' % (client_adr[0], client_adr[1])
             if verbose:
                 print msg
@@ -31,8 +34,18 @@ def honey(port, run_time, verbose, reply):
     s.close()
 
 
+if 'basic' in sys.argv:
+    start = time.time()
+    cmd = 'cat index.html | nc -v -l -k 80'
+    try:
+        os.system(cmd)
+    except KeyboardInterrupt:
+        pass
+    print '[!] Server Killed [%ss Elapsed]' % str(time.time()-tic)
+
 if 'http' in sys.argv:
     honey(80, 60, True, open('index.html').read())
+
 if 'ssh' in sys.argv:
     honey(22, 60, True, '\033[31m')
 
