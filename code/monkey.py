@@ -40,7 +40,7 @@ if 'basic' in sys.argv:
         os.system('sh serve.sh')
     except KeyboardInterrupt:
         pass
-    print '[!] Server Killed [%ss Elapsed]' % str(time.time()-tic)
+    print '[!] Server Killed [%ss Elapsed]' % str(time.time()-start)
 
 if 'http' in sys.argv:
     honey(80, 60, True, open('index.html').read())
