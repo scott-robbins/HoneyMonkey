@@ -36,9 +36,8 @@ def honey(port, run_time, verbose, reply):
 
 if 'basic' in sys.argv:
     start = time.time()
-    cmd = 'cat index.html | nc -v -l -k 80'
     try:
-        os.system(cmd)
+        os.system('sh serve.sh')
     except KeyboardInterrupt:
         pass
     print '[!] Server Killed [%ss Elapsed]' % str(time.time()-tic)
