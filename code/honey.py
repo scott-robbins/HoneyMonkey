@@ -46,9 +46,9 @@ def swap(fname, destroy):
 
 @app.route('/')
 def hello_friend():
-    cmd = "GET https://ipinfo.io/$(GET 'https://api.ipify.org?format=json' | jq -r .'ip')"
+    cmd = "curl https://ipinfo.io/$(curl 'https://api.ipify.org?format=json' | jq -r .'ip')"
     os.system(cmd + ' >> user.txt')
-    os.system('echo $(' + cmd + ")")
+    #os.system('echo $(' + cmd + ")")
     data = ''
     for line in swap('user.txt', True):
         data += line
@@ -59,5 +59,5 @@ def hello_friend():
 
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))
+    port = int(os.getenv('PORT', 80))
 app.run(debug=True, host='0.0.0.0', port=port)
