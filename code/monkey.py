@@ -4,7 +4,7 @@ import time
 import sys
 import os
 
-log_timer = 30  # seconds between log updates
+log_timer = 5  # seconds between log updates
 
 
 def honey(port, run_time, verbose, reply):
@@ -21,27 +21,24 @@ def honey(port, run_time, verbose, reply):
     tic = time.time()
     try:
         while (time.time() - tic) < run_time:
+            if (int(time.time())-int(tic)) % 5 == 0:
+                date, local_time = utils.create_timestamp()
+
             client, client_adr = s.accept()
             try:
+                # Recv? (idk... so much room for error)
                 client.send(reply)
                 client.close()
                 clients.append(client_adr[0])
             except socket.error:
                 print '[*] Connection Broken with %s' % client_adr[0]
-            except:
-                pass
 
             msg = '[*] Connection accepted-> %s:%d' % (client_adr[0], client_adr[1])
-            data += '[*] Connection accepted from %s at %s - %s\n' % (client_adr[0], date, local_time)
+            data = '[*] Connection accepted from %s at %s - %s\n' % (client_adr[0], date, local_time)
             if verbose:
                 print msg
-            if int(time.time()-tic)%1==0:
-                date, local_time = utils.create_timestamp()
-            if int(time.time() - tic) % log_timer == 0:
-                print '[*] Logging Connections [%ss Elapsed]' % str(time.time()-tic)
-                open(log_file, 'wb').write(data)
-                data = ''
-
+                print '[*] Logging Connections [%ss Elapsed]' % str(time.time() - tic)
+                open(log_file, 'a').write(data)
     except KeyboardInterrupt:
         print '[!!] Server Killed [%ss Elapsed]' % str(time.time() - tic)
         pass
